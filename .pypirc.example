@@ -1,0 +1,37 @@
+# Example .pypirc file
+# Copy this to ~/.pypirc and edit with your PyPI credentials
+
+[distutils]
+index-servers =
+    pypi
+    testpypi
+
+[pypi]
+username = __token__
+password = pypi-your-api-token-here
+
+[testpypi]
+repository = https://test.pypi.org/legacy/
+username = __token__
+password = pypi-your-test-api-token-here
+
+# Instructions for publishing to PyPI:
+#
+# 1. First, build the distribution packages:
+#    python -m pip install --upgrade build
+#    python -m build
+#
+# 2. Install twine for uploading to PyPI:
+#    python -m pip install --upgrade twine
+#
+# 3. Upload to Test PyPI first (recommended):
+#    python -m twine upload --repository testpypi dist/*
+#
+# 4. Test installation from Test PyPI:
+#    pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ controlpi
+#
+# 5. If everything works, upload to the real PyPI:
+#    python -m twine upload dist/*
+#
+# 6. Install from real PyPI:
+#    pip install controlpi 

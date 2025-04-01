@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="zenbot-pi",
-    version="0.1.0",
+    version="0.1.1",
     author="Inky Ganbold",
     author_email="enkhbold470@gmail.com",
     description="I2C Motor Controller for Raspberry Pi/Arduino robots",

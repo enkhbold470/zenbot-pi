@@ -28,10 +28,10 @@ password = pypi-your-test-api-token-here
 #    python -m twine upload --repository testpypi dist/*
 #
 # 4. Test installation from Test PyPI:
-#    pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ controlpi
+#    pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ zenbot-pi
 #
 # 5. If everything works, upload to the real PyPI:
 #    python -m twine upload dist/*
 #
 # 6. Install from real PyPI:
-#    pip install controlpi 
+#    pip install zenbot-pi 

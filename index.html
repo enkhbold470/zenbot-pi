@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ZenBot-Pi</title>
+  <style>
+    body { font-family: sans-serif; background: #121212; color: #f0f0f0; padding: 2rem; line-height: 1.6; }
+    pre { background: #1e1e1e; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { color: #00e0ff; }
+    h1, h2, h3 { color: #00ffcc; }
+    a { color: #33ccff; }
+    img.badge { margin-right: 0.5rem; }
+    iframe { margin-top: 1rem; border: none; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <h1>ZenBot-Pi</h1>
+
+  <p>
+    <a href="https://badge.fury.io/py/zenbot-pi"><img class="badge" src="https://badge.fury.io/py/zenbot-pi.svg" alt="PyPI version" /></a>
+    <a href="https://www.python.org/downloads/release/python-310/"><img class="badge" src="https://img.shields.io/badge/python-3.10-blue.svg" alt="Python 3.10" /></a>
+    <a href="https://opensource.org/licenses/MIT"><img class="badge" src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License" /></a>
+  </p>
+
+  <p>A Python package for controlling Arduino-based motor robots over I2C communication from a Raspberry Pi or other Linux SBCs.</p>
+
+  <h2>📽️ Demo Video</h2>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/QkVqdz7QVy4" title="ZenBot-Pi Demo" allowfullscreen></iframe>
+
+  <h2>Features</h2>
+  <ul>
+    <li>Simple control of DC motors connected to an Arduino</li>
+    <li>I2C communication protocol for reliability</li>
+    <li>Command-line interface for manual control</li>
+    <li>Library for integration into your Python projects</li>
+  </ul>
+
+  <h2>Installation</h2>
+  <h3>From PyPI</h3>
+  <pre><code>pip install zenbot-pi</code></pre>
+
+  <h3>From Source</h3>
+  <pre><code>git clone https://github.com/yourusername/zenbot-pi.git
+cd zenbot-pi
+pip install -e .
+</code></pre>
+
+  <h2>Hardware Setup</h2>
+  <ol>
+    <li>Connect your Raspberry Pi/Orange Pi to Arduino via I2C:
+      <ul>
+        <li>Pi SDA → Arduino A4 (SDA)</li>
+        <li>Pi SCL → Arduino A5 (SCL)</li>
+        <li>Pi GND → Arduino GND</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>Pinout Information</h3>
+  <ul>
+    <li><strong>Motor Control Pins:</strong>
+      <ul>
+        <li><code>enA (Pin 6)</code>: Enables motor A.</li>
+        <li><code>in1 (Pin 4)</code>: Controls direction of motor A (input 1).</li>
+        <li><code>in2 (Pin 5)</code>: Controls direction of motor A (input 2).</li>
+        <li><code>in3 (Pin 7)</code>: Controls direction of motor B (input 1).</li>
+        <li><code>in4 (Pin 8)</code>: Controls direction of motor B (input 2).</li>
+        <li><code>enB (Pin 9)</code>: Enables motor B.</li>
+      </ul>
+    </li>
+    <li><strong>Buzzer and Button Pins:</strong>
+      <ul>
+        <li><code>buzzer (Pin A0)</code>: Used to produce sound feedback.</li>
+        <li><code>startButton (Pin 12)</code>: Button to stop the motors for safety.</li>
+      </ul>
+    </li>
+    <li><strong>I2C Communication:</strong> Arduino uses I2C address <code>0x08</code>.</li>
+  </ul>
+
+  <ol start="2">
+    <li>Make sure the Arduino is running the provided sketch with I2C slave address set to 0x08.</li>
+    <li>Enable I2C on your Raspberry Pi:
+      <pre><code>sudo raspi-config</code></pre>
+      Navigate to <code>Interfacing Options → I2C → Enable</code><br>
+      For Orange Pi: use <code>sudo orangepi-config</code>.
+    </li>
+  </ol>
+
+  <h2>Using the CLI</h2>
+  <pre><code># Run interactive control mode
+zenbot-pi interactive
+
+# Run test sequence
+zenbot-pi test
+
+# Send direct commands
+zenbot-pi direct forward
+zenbot-pi direct stop
+zenbot-pi direct 5  # Set speed to 5
+
+# Use different I2C bus or address
+zenbot-pi --i2c-bus 1 --address 0x09 interactive
+</code></pre>
+
+  <h2>Using the Library</h2>
+  <pre><code>from zenbot import MotorController
+
+controller = MotorController(i2c_bus=3, address=0x08)
+
+if controller.test_communication():
+    controller.set_speed(5)
+    controller.forward()
+    import time
+    time.sleep(2)
+    controller.stop()
+    controller.close()
+</code></pre>
+
+  <h2>Available Commands</h2>
+  <ul>
+    <li><code>forward()</code> - Move robot forward</li>
+    <li><code>backward()</code> - Move robot backward</li>
+    <li><code>left()</code> - Turn robot left</li>
+    <li><code>right()</code> - Turn robot right</li>
+    <li><code>stop()</code> - Stop all motors</li>
+    <li><code>set_speed(level)</code> - Set speed level (0-9)</li>
+    <li><code>get_status()</code> - Get system status</li>
+    <li><code>send_command(cmd)</code> - Send a raw command character</li>
+    <li><code>close()</code> - Close I2C connection</li>
+  </ul>
+
+  <h2>Arduino Setup</h2>
+  <ol>
+    <li>Listens for commands on I2C bus (address 0x08 by default)</li>
+    <li>Controls motor driver shield/circuit based on received commands</li>
+    <li>Provides status feedback</li>
+  </ol>
+
+  <h2>Troubleshooting</h2>
+  <ul>
+    <li>Check I2C connection with <code>i2cdetect -y [bus_number]</code></li>
+    <li>Ensure Arduino has the correct I2C address (0x08)</li>
+    <li>Verify power supply is adequate for motors</li>
+    <li>Check <code>zenbot.log</code> for debug info</li>
+  </ul>
+
+  <h2>License</h2>
+  <p>MIT License - see LICENSE file for details</p>
+
+  <h2>Contributing</h2>
+  <p>Contributions are welcome! Please feel free to submit a Pull Request.</p>
+
+</body>
+</html>
